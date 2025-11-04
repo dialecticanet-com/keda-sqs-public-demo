@@ -1,0 +1,39 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: sqs-consumer-job
+  namespace: default
+  labels:
+    app: sqs-consumer
+spec:
+  template:
+    metadata:
+      labels:
+        app: sqs-consumer
+    spec:
+      serviceAccountName: sqs-consumer-sa
+      restartPolicy: Never
+      containers:
+      - name: consumer
+        image: sqs-consumer:latest
+        imagePullPolicy: Never
+        env:
+        - name: SQS_QUEUE_URL
+          value: "http://localstack:4566/000000000000/demo-queue"
+        - name: AWS_REGION
+          value: "us-east-1"
+        - name: AWS_ENDPOINT_URL
+          value: "http://localstack:4566"
+        - name: AWS_ACCESS_KEY_ID
+          value: "test"
+        - name: AWS_SECRET_ACCESS_KEY
+          value: "test"
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "50m"
+          limits:
+            memory: "128Mi"
+            cpu: "100m"
+  backoffLimit: 3
+  ttlSecondsAfterFinished: 300

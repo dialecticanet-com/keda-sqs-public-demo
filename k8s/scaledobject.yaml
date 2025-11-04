@@ -1,0 +1,76 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  name: aws-credentials
+  namespace: default
+type: Opaque
+stringData:
+  AWS_ACCESS_KEY_ID: "test"
+  AWS_SECRET_ACCESS_KEY: "test"
+---
+apiVersion: keda.sh/v1alpha1
+kind: TriggerAuthentication
+metadata:
+  name: aws-credentials-trigger
+  namespace: default
+spec:
+  secretTargetRef:
+  - parameter: awsAccessKeyID
+    name: aws-credentials
+    key: AWS_ACCESS_KEY_ID
+  - parameter: awsSecretAccessKey
+    name: aws-credentials
+    key: AWS_SECRET_ACCESS_KEY
+---
+apiVersion: keda.sh/v1alpha1
+kind: ScaledJob
+metadata:
+  name: sqs-consumer-scaledobject
+  namespace: default
+spec:
+  jobTargetRef:
+    template:
+      metadata:
+        labels:
+          app: sqs-consumer
+      spec:
+        serviceAccountName: sqs-consumer-sa
+        restartPolicy: Never
+        containers:
+        - name: consumer
+          image: sqs-consumer:latest
+          imagePullPolicy: Never
+          env:
+          - name: SQS_QUEUE_URL
+            value: "http://localstack:4566/000000000000/demo-queue"
+          - name: AWS_REGION
+            value: "us-east-1"
+          - name: AWS_ENDPOINT_URL
+            value: "http://localstack:4566"
+          - name: AWS_ACCESS_KEY_ID
+            value: "test"
+          - name: AWS_SECRET_ACCESS_KEY
+            value: "test"
+          resources:
+            requests:
+              memory: "64Mi"
+              cpu: "50m"
+            limits:
+              memory: "128Mi"
+              cpu: "100m"
+  pollingInterval: 5
+  maxReplicaCount: 50
+  successfulJobsHistoryLimit: 10
+  failedJobsHistoryLimit: 5
+  scalingStrategy:
+    strategy: "default"
+  triggers:
+  - type: aws-sqs-queue
+    authenticationRef:
+      name: aws-credentials-trigger
+    metadata:
+      queueURL: "http://localstack:4566/000000000000/demo-queue"
+      queueLength: "1"
+      awsRegion: "us-east-1"
+      awsEndpoint: "http://localstack:4566"
+      identityOwner: "operator"
