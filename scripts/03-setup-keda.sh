@@ -83,6 +83,18 @@ kubectl get deployment keda-operator -n "${KEDA_NAMESPACE}" -o jsonpath='{.spec.
 echo ""
 
 echo ""
+echo "🔧 Configuring KEDA operator for LocalStack..."
+kubectl set env deployment/keda-operator -n "${KEDA_NAMESPACE}" \
+    AWS_EC2_METADATA_DISABLED=true \
+    AWS_ACCESS_KEY_ID=test \
+    AWS_SECRET_ACCESS_KEY=test \
+    AWS_DEFAULT_REGION=us-east-1
+
+echo ""
+echo "⏳ Waiting for KEDA operator to restart with new configuration..."
+kubectl rollout status deployment/keda-operator -n "${KEDA_NAMESPACE}" --timeout=120s
+
+echo ""
 echo "✅ Step 3 complete! Next step:"
 echo "   ./scripts/04-deploy-scaledobject.sh"
 echo ""

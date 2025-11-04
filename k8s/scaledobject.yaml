@@ -42,11 +42,11 @@ spec:
           imagePullPolicy: Never
           env:
           - name: SQS_QUEUE_URL
-            value: "http://localstack:4566/000000000000/demo-queue"
+            value: "http://localstack.default.svc.cluster.local:4566/000000000000/demo-queue"
           - name: AWS_REGION
             value: "us-east-1"
           - name: AWS_ENDPOINT_URL
-            value: "http://localstack:4566"
+            value: "http://localstack.default.svc.cluster.local:4566"
           - name: AWS_ACCESS_KEY_ID
             value: "test"
           - name: AWS_SECRET_ACCESS_KEY
@@ -69,8 +69,8 @@ spec:
     authenticationRef:
       name: aws-credentials-trigger
     metadata:
-      queueURL: "http://localstack:4566/000000000000/demo-queue"
+      queueURL: "http://localstack.default.svc.cluster.local:4566/000000000000/demo-queue"
       queueLength: "1"
       awsRegion: "us-east-1"
-      awsEndpoint: "http://localstack:4566"
+      awsEndpoint: "http://localstack.default.svc.cluster.local:4566"
       identityOwner: "operator"
