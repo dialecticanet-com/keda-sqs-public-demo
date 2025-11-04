@@ -45,29 +45,70 @@ This demo showcases how KEDA can automatically scale Kubernetes Jobs based on th
 Before starting, ensure you have the following installed:
 
 - **Docker Desktop** (or Docker Engine) - Running and accessible
+
 - **kubectl** - Kubernetes command-line tool
   ```bash
+  # macOS
   brew install kubectl
+
+  # Linux
+  curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+  sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
   ```
+
 - **kind** - Kubernetes in Docker
   ```bash
+  # macOS
   brew install kind
+
+  # Linux
+  curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64
+  chmod +x ./kind
+  sudo mv ./kind /usr/local/bin/kind
   ```
+
 - **Helm** - Kubernetes package manager
   ```bash
+  # macOS
   brew install helm
+
+  # Linux
+  curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
   ```
+
 - **AWS CLI** - For sending messages to LocalStack SQS
   ```bash
+  # macOS
   brew install awscli
+
+  # Linux
+  curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+  unzip awscliv2.zip
+  sudo ./aws/install
   ```
+
 - **fortune** - For generating random messages (optional, script will use fallback)
   ```bash
+  # macOS
   brew install fortune
+
+  # Linux (Debian/Ubuntu)
+  sudo apt-get install fortune-mod
+
+  # Linux (RHEL/Fedora)
+  sudo dnf install fortune-mod
   ```
+
 - **jq** - JSON processor (optional, for better output formatting)
   ```bash
+  # macOS
   brew install jq
+
+  # Linux (Debian/Ubuntu)
+  sudo apt-get install jq
+
+  # Linux (RHEL/Fedora)
+  sudo dnf install jq
   ```
 
 ## Quick Start

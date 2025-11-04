@@ -12,8 +12,40 @@ Ensure you have installed:
 - awscli
 - fortune (optional)
 
+**macOS:**
 ```bash
 brew install kubectl kind helm awscli fortune
+```
+
+**Linux (Debian/Ubuntu):**
+```bash
+# kubectl
+curl -LO "https://dl.k8s.io/release/$(curl -L -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+sudo install -o root -g root -m 0755 kubectl /usr/local/bin/kubectl
+
+# kind
+curl -Lo ./kind https://kind.sigs.k8s.io/dl/v0.20.0/kind-linux-amd64
+chmod +x ./kind
+sudo mv ./kind /usr/local/bin/kind
+
+# helm
+curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash
+
+# awscli
+curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
+unzip awscliv2.zip
+sudo ./aws/install
+
+# fortune (optional)
+sudo apt-get install fortune-mod
+```
+
+**Linux (RHEL/Fedora):**
+```bash
+# kubectl, kind, helm, awscli - same as Debian/Ubuntu above
+
+# fortune (optional)
+sudo dnf install fortune-mod
 ```
 
 ## Setup (5 minutes)
