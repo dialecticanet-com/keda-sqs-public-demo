@@ -80,13 +80,13 @@ If you want continuous message flow:
 
 ```bash
 # Terminal 1
-./scripts/produce-messages.sh    # 20 messages/second
+./scripts/produce-messages-in-cluster.sh    # 20 messages/second
 
 # Terminal 2
-./scripts/watch-jobs.sh          # Monitor jobs
+./scripts/watch-jobs.sh          # Monitor SQS backlog
 
 # Terminal 3
-kubectl logs -f -l app=sqs-consumer --max-log-requests=20
+kubectl logs --max-log-requests 100 -f -l app=sqs-consumer
 ```
 
 Press Ctrl+C in Terminal 1 to stop, then watch scale-down to zero.
